@@ -5,15 +5,34 @@
 #include <QStaticText>
 using namespace std;
 
+
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    pictHeight = 390;
-    pictWidth = 660;
+
+    // Косметическая подготовка приложения
+      this->resize(960,660);          // Устанавливаем размеры окна приложения
+      this->setFixedSize(960,660);
+
+    scene = new QGraphicsScene();   // Инициализируем графическую сцену
+    scene->setItemIndexMethod(QGraphicsScene::NoIndex); // настраиваем индексацию элементов
+
+    ui->graphicsView->resize(890,430);  // Устанавливаем размер graphicsView
+    ui->graphicsView->setScene(scene);  // Устанавливаем графическую сцену в graphicsView
+    ui->graphicsView->setRenderHint(QPainter::Antialiasing);    // Настраиваем рендер
+    ui->graphicsView->setCacheMode(QGraphicsView::CacheBackground); // Кэш фона
+    ui->graphicsView->setViewportUpdateMode(QGraphicsView::BoundingRectViewportUpdate);
+
+
+    scene->setSceneRect(0,0,600,300); // Устанавливаем размер сцены
+
+    pictHeight = 400;
+    pictWidth = 950;
     step = 1.0;
-    leftX = -10; rightX = 10;
+    leftX = -5; rightX = 5;
     leftY = -10; rightY = 10;
     drawGraph();
 }
@@ -88,7 +107,12 @@ void MainWindow::drawGraph(bool notEmpty)
 
     if(!notEmpty) {
         paint.end();
-        ui->outputGraph->setPixmap(graph);
+
+        scene->clear();
+        QGraphicsPixmapItem *item = new QGraphicsPixmapItem(graph); // Создаём графический элемент
+        item->setFlag(QGraphicsItem::ItemIsMovable); // делаем элемент перемещаемым
+        item->setFlag(QGraphicsItem::ItemIsSelectable);//выделяем элемент, который перемещаем
+        scene->addItem(item);   // Добавляем элемент на графическую сцену
         return;
     }
 
@@ -114,7 +138,13 @@ void MainWindow::drawGraph(bool notEmpty)
     paint.setPen(QPen(Qt::blue,2,Qt::SolidLine));
     paint.drawPath(path);
     paint.end();
-    ui->outputGraph->setPixmap(graph);
+
+    scene->clear();
+    QGraphicsPixmapItem *item = new QGraphicsPixmapItem(graph); // Создаём графический элемент
+    item->setFlag(QGraphicsItem::ItemIsMovable); // делаем элемент перемещаемым
+    item->setFlag(QGraphicsItem::ItemIsSelectable);//выделяем элемент, который перемещаем
+    scene->addItem(item);   // Добавляем элемент на графическую сцену
+    item->setPos(0, 0);   // Устанавливаем позицию элемента
     return;
 }
 

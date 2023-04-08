@@ -3,6 +3,16 @@
 
 #include <QMainWindow>
 #include <QtGui>
+#include <QGraphicsScene>
+
+#include <QObject>
+#include <QGraphicsItem>
+#include <QPainter>
+#include <QGraphicsSceneMouseEvent>
+#include <QDebug>
+#include <QCursor>
+
+#include <moveitem.h>
 
 
 QT_BEGIN_NAMESPACE
@@ -26,6 +36,7 @@ public:
     void recountPixels();
 
 
+
 private slots:
     void on_pushButton_clicked();
 
@@ -36,6 +47,7 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    QGraphicsScene *scene;
     double leftX,rightX;
     double leftY,rightY;
     int pictWidth,pictHeight;
@@ -47,5 +59,7 @@ private:
 
     double a, b, c, d; // Коэффициенты уравнения
     double k; // Коэффициент масштабирования
+
+
 };
 #endif // MAINWINDOW_H
